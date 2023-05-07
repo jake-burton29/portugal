@@ -4,7 +4,7 @@ import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 const Navbar: React.FC = () => {
   const user = useUser();
   const [isOpen, setIsOpen] = useState(false);
-
+  console.log(user);
   const handleToggle = () => {
     setIsOpen(!isOpen);
   };
