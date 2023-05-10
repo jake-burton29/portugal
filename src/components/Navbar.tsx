@@ -10,7 +10,7 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="flex flex-wrap items-center justify-between bg-blue-200 p-6">
+    <nav className="flex w-screen flex-wrap justify-between bg-blue-200 p-6">
       <div className="mr-6 flex flex-shrink-0 items-center text-gray-600">
         <Link className="text-2xl font-bold tracking-tight" href="/">
           Portugal Paradise
