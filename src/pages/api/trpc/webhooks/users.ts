@@ -1,4 +1,4 @@
-import { users } from "@clerk/nextjs/api";
+import { clerkClient, users } from "@clerk/nextjs/api";
 import type { WebhookEvent } from "@clerk/nextjs/api";
 import { Webhook } from "svix";
 import { headers } from "next/headers";
@@ -45,10 +45,8 @@ export async function UPDATE(req: Request) {
         status: 400,
       });
     }
-    await users.updateUser(id, {
-      publicMetadata: {
-        role: "customer",
-      },
+    await clerkClient.users.updateUserMetadata(id, {
+      publicMetadata: { role: "customer" },
     });
     return new Response("Succesfully added role", {
       status: 200,

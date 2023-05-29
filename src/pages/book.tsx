@@ -56,12 +56,12 @@ class Calendar extends React.Component {
           months={2}
         />
         <button
-          onClick={() =>
-            console.log(
-              this.state.range[0].startDate,
-              this.state.range[0].endDate
-            )
-          }
+        // onClick={() =>
+        //   console.log(
+        //     this.state.range[0].startDate,
+        //     this.state.range[0].endDate
+        //   )
+        // }
         >
           123
         </button>
