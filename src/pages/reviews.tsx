@@ -7,6 +7,9 @@ import { LoadingPage } from "~/components/loading";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Image from "next/image";
+import { SignInButton, useUser } from "@clerk/nextjs";
+import { useState } from "react";
+import { Rating } from "~/components/Rating";
 
 dayjs.extend(relativeTime);
 
@@ -39,14 +42,69 @@ const ReviewView = (props: ReviewWithUser) => {
   );
 };
 
-const reviews: NextPage = () => {
-  const { data, isLoading } = api.review.getAll.useQuery();
-  if (isLoading) return <LoadingPage />;
+const CreateReview = () => {
+  const { user } = useUser();
+
+  const ctx = api.useContext();
+
+  const { mutate, isLoading: isPosting } = api.review.create.useMutation({
+    onSuccess: () => {
+      setTitleInput("");
+      setContentInput("");
+      void ctx.review.getAll.invalidate();
+    },
+  });
+
+  const [titleInput, setTitleInput] = useState("");
+  const [contentInput, setContentInput] = useState("");
+  if (!user) return null;
+  return (
+    <form>
+      <input
+        type="text"
+        placeholder="Title"
+        value={titleInput}
+        onChange={(e) => setTitleInput(e.target.value)}
+        disabled={isPosting}
+      />
+      <input
+        type="text"
+        placeholder="Content"
+        value={contentInput}
+        onChange={(e) => setContentInput(e.target.value)}
+        disabled={isPosting}
+      />
+      <button
+        onClick={() => mutate({ title: titleInput, content: contentInput })}
+        disabled={isPosting}
+      >
+        Submit
+      </button>
+    </form>
+  );
+};
+
+const Reviews: NextPage = () => {
+  const { data, isLoading: reviewsLoading } = api.review.getAll.useQuery();
+  const { isLoaded: userLoaded, isSignedIn } = useUser();
+
+  if (reviewsLoading) return <LoadingPage />;
 
   if (!data) return <div>Something went wrong</div>;
+
+  if (!userLoaded) return <div />;
+
   return (
     <Layout>
       <div>reviews</div>
+      <div className="flex border-b border-slate-400 p-4">
+        {!isSignedIn && (
+          <div className="flex justify-center">
+            <SignInButton />
+          </div>
+        )}
+        {isSignedIn && <CreateReview />}
+      </div>
       <div>
         {data?.map((fullReview) => (
           <ReviewView {...fullReview} key={fullReview.review.id} />
@@ -56,4 +114,4 @@ const reviews: NextPage = () => {
   );
 };
 
-export default reviews;
+export default Reviews;

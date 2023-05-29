@@ -10,7 +10,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@clerk/nextjs": "^4.16.4",
+    "@clerk/nextjs": "^4.18.4",
     "@prisma/client": "^4.11.0",
     "@tanstack/react-query": "^4.28.0",
     "@trpc/client": "^10.18.0",
@@ -25,6 +25,7 @@
     "react-date-range": "^1.4.0",
     "react-dom": "^18.2.0",
     "superjson": "1.12.2",
+    "svix": "^0.85.1",
     "zod": "^3.21.4"
   },
   "devDependencies": {

@@ -3,7 +3,11 @@ import { clerkClient } from "@clerk/nextjs/server";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  privateProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 
 const filterUserForClient = (user: User) => {
   return {
@@ -19,6 +23,7 @@ export const reviewRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     const reviews = await ctx.prisma.review.findMany({
       take: 100,
+      orderBy: [{ createdAt: "desc" }],
     });
 
     const users = (
@@ -49,4 +54,24 @@ export const reviewRouter = createTRPCRouter({
       };
     });
   }),
+
+  create: privateProcedure
+    .input(
+      z.object({
+        content: z.string().min(1),
+        title: z.string().min(1).max(40),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const authorId = ctx.userId;
+
+      const review = await ctx.prisma.review.create({
+        data: {
+          authorId,
+          title: input.title,
+          content: input.content,
+        },
+      });
+      return review;
+    }),
 });

@@ -1,6 +1,11 @@
 import Link from "next/link";
 import React, { useState } from "react";
-import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+import {
+  SignInButton,
+  SignOutButton,
+  useUser,
+  UserProfile,
+} from "@clerk/nextjs";
 const Navbar: React.FC = () => {
   const user = useUser();
   const [isOpen, setIsOpen] = useState(false);
@@ -57,7 +62,17 @@ const Navbar: React.FC = () => {
           </Link>
           <div className="mx-auto mt-4 text-lg font-semibold text-gray-600 hover:text-white lg:mt-0 lg:inline-block">
             {!user.isSignedIn && <SignInButton />}
-            {!!user.isSignedIn && <SignOutButton />}
+            {!!user.isSignedIn && (
+              <div>
+                <Link
+                  href="/user"
+                  className="mt-4 block text-lg font-semibold text-gray-600 hover:text-white lg:mr-8 lg:mt-0 lg:inline-block"
+                >
+                  User
+                </Link>
+                <SignOutButton />
+              </div>
+            )}
           </div>
 
           {/* More links here */}
