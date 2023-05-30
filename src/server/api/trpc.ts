@@ -24,16 +24,38 @@ import { prisma } from "~/server/db";
  *
  * @see https://trpc.io/docs/context
  */
-export const createTRPCContext = (opts: CreateNextContextOptions) => {
-  const { req } = opts;
+// export const createTRPCContext = (opts: CreateNextContextOptions) => {
+//   const { req } = opts;
 
-  const sesh = getAuth(req);
-  const publicMD = sesh.sessionClaims?.public_metadata as UserPublicMetadata;
-  const userId = sesh.userId;
+//   const sesh = getAuth(req);
+//   const publicMD = sesh.sessionClaims?.public_metadata as UserPublicMetadata;
+//   const userId = sesh.userId;
+//   return {
+//     prisma,
+//     userId,
+//     publicMetadata: publicMD,
+//   };
+// };
+import type {
+  SignedInAuthObject,
+  SignedOutAuthObject,
+} from "@clerk/nextjs/dist/api";
+
+interface AuthContext {
+  auth: SignedInAuthObject | SignedOutAuthObject;
+}
+export const createTRPCContext = (_opts: CreateNextContextOptions) => {
+  return createInnerTRPCContext({ auth: getAuth(_opts.req) });
+};
+const createInnerTRPCContext = ({ auth }: AuthContext) => {
+  console.log("trpc auth: ", auth);
   return {
+    publicMetadata: auth.sessionClaims?.public_metadata as
+      | UserPublicMetadata
+      | undefined,
+    auth,
     prisma,
-    userId,
-    publicMetadata: publicMD,
+    userId: auth.userId,
   };
 };
 
@@ -102,7 +124,7 @@ const enforceUserisAuthorized = t.middleware(async ({ ctx, next }) => {
 export const privateProcedure = t.procedure.use(enforceUserisAuthorized);
 
 const enforceUserIsAdmin = t.middleware(async ({ ctx, next }) => {
-  if (ctx.publicMetadata.role !== "admin") {
+  if (!ctx.publicMetadata || ctx.publicMetadata.role !== "admin") {
     throw new TRPCError({
       code: "UNAUTHORIZED",
     });

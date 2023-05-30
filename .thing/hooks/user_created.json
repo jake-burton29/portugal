@@ -1,0 +1,42 @@
+{
+  "data": {
+    "id": "user_29w83sxmDNGwOuEthce5gg56FcC",
+    "gender": "",
+    "object": "user",
+    "birthday": "",
+    "username": null,
+    "image_url": "https://img.clerk.com/xxxxxx",
+    "last_name": "Example",
+    "created_at": 1654012591514,
+    "first_name": "Example",
+    "updated_at": 1654012591835,
+    "external_id": "567772",
+    "web3_wallets": [],
+    "phone_numbers": [],
+    "email_addresses": [
+      {
+        "id": "idn_29w83yL7CwVlJXylYLxcslromF1",
+        "object": "email_address",
+        "linked_to": [],
+        "verification": {
+          "status": "verified",
+          "strategy": "ticket"
+        },
+        "email_address": "example@example.org"
+      }
+    ],
+    "last_sign_in_at": 1654012591514,
+    "public_metadata": {},
+    "unsafe_metadata": {},
+    "password_enabled": true,
+    "private_metadata": {},
+    "external_accounts": [],
+    "profile_image_url": "https://www.gravatar.com/avatar?d=mp",
+    "two_factor_enabled": false,
+    "primary_web3_wallet_id": null,
+    "primary_phone_number_id": null,
+    "primary_email_address_id": "idn_29w83yL7CwVlJXylYLxcslromF1"
+  },
+  "type": "user.created",
+  "object": "event"
+}

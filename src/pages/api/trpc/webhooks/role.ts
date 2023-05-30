@@ -1,11 +1,11 @@
-import { clerkClient, users } from "@clerk/nextjs/api";
+import { users } from "@clerk/nextjs/api";
 import type { WebhookEvent } from "@clerk/nextjs/api";
 import { Webhook } from "svix";
 import { headers } from "next/headers";
-
+import { buffer } from "micro";
 const webhookSecret: string = process.env.WEBHOOK_SECRET || "";
 
-export async function UPDATE(req: Request) {
+export async function handler(req: Request) {
   const payload: unknown = await req.json();
   const payloadString = JSON.stringify(payload);
   const headerPayload = headers();
@@ -45,10 +45,10 @@ export async function UPDATE(req: Request) {
         status: 400,
       });
     }
-    await clerkClient.users.updateUserMetadata(id, {
+    await users.updateUserMetadata(id, {
       publicMetadata: { role: "customer" },
     });
-    return new Response("Succesfully added role", {
+    return new Response(`Succesfully added role`, {
       status: 200,
     });
   }
